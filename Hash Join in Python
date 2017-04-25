@@ -1,0 +1,84 @@
+import csv
+import os
+import datetime
+import sys
+
+file_name = sys.argv[1]
+
+def parser(file,column_names,delimiter):
+    data = []
+    Path = os.path.join('/home/aneeshks/data/flash',file)
+    delim = delimiter
+    print("")
+    print("\nOpening ",file)
+    OFile  = open(Path)
+    raw = csv.reader(OFile, delimiter = delim)
+    fields = column_names
+    print('Length of columns ',len(fields))
+    count = 0
+    print("Parsing ",file)
+    for row in raw:
+        if count%500000 == 0:
+           print(count)
+        count+=1
+        data.append(dict(zip(fields,row)))
+        if count==4:
+           #print row
+           print len(row)
+           #break
+        data.append(dict(zip(fields,row)))
+    #print data[1]
+    #print "Im here"
+    #for col in fields:
+    #print data[1].get(col,"LOL")
+    print("Completed Parsing ",file)
+    return data
+
+
+order_columns = ['orderid','custmid','inqdt','mnt','cb','test']
+Order_data= parser("anno.txt",order_columns,'\t')
+order_hash = {}
+final_output = []
+
+mds_columns = ['objectId','avs']
+mds_data = parser("out_1_split." + file_name,mds_columns,'|')
+mds_hash = {}
+
+print("\nCreating hashmap for Data")
+for i in range(len(mds_data)):
+    order_id = mds_data[i]['objectId']
+    mds_hash[order_id] = mds_data[i]
+
+print("\njoining with Order_Data")
+for i in range(len(Order_data)):
+    temp_dict = {}
+    join_id = Order_data[i]['orderid']
+    out=mds_hash.get(join_id,None)
+    if out:
+        temp_dict = Order_data[i]
+        temp_dict.update(out)
+        final_output.append(temp_dict)
+        
+print("\nJoins Completed")
+#print(final_output)
+#final = mds_columns + order_columns
+#for f in final:
+    #print final[1].get(f,"LOL")
+Path = os.path.join('/home/aneeshks/data/flash',"ganymede_join_" + file_name + ".txt")
+
+print("\nWriting to "+file_name+".txt in '|' delimited format")
+final_file = csv.writer(open(Path, "w+"),delimiter='|')
+count = 0
+for row in final_output:
+     col = row.keys()
+     if count == 0:
+         final_file.writerow(col)
+     #if count==6:
+         #break
+     count+=1
+     data = [row[each] for each in col]
+     final_file.writerow(data)
+     count+=1
+     #print(count)
+     #print(len(col))
+print("\nWriting to file completed")
