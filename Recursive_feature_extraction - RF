@@ -1,0 +1,47 @@
+
+
+#rfe based feature selection algorithm
+#------------------------------------------------------------------------#
+library(stringi)
+library(e1071)
+library(caret)
+ 
+run.feature.selection <- function(num.iters=2, feature.vars, class.var){
+  set.seed(10)
+  subsets <- c(1:5, 10, 20, 40)
+  control <- rfeControl(functions = rfFuncs, method = "cv",
+                        verbose = TRUE, returnResamp = "all",
+                        number = num.iters)
+  results.rfe <- rfe(x = feature.vars, y = class.var,
+                     	sizes = subsets,
+                     	rfeControl = control)
+  return(results.rfe)
+}
+ 
+ 
+#run feature selection
+#------------------------------------------------------------------------#
+
+rfe.results <- run.feature.selection(feature.vars=Validation2[,-43],
+                                     class.var=Validation2[,43])
+
+# view results
+#------------------------------------------------------------------------#
+rfe.results
+ 
+getwd()
+varImp(rfe.results)
+
+# Export Data as CSV
+#------------------------------------------------------------------------#
+write.csv(varImp(rfe.results), file = "rfe.results.csv")
+ 
+
+names(rfe.results)
+rfe.results2$variables
+ 
+ames(varImp(rfe.results))
+pickVars(rfe.results$variables, rfe.results$is_bad)
+
+# End
+#------------------------------------------------------------------------#
