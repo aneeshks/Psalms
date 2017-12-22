@@ -15,7 +15,7 @@ sourceDataDF.head(2)
 OutPutdata = pd.DataFrame([])
 Index = 0
 #sourceDataDF.Site.unique()
-Sites = ['billingsgazette.com','buschleaguesports.com','draftseason.com','madison.com','musivisa.com','recipevip.com']
+Sites = ['abc.com','xyz.com']
 
 for featSites in Sites:
     Index = Index + 1
