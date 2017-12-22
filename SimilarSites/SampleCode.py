@@ -1,12 +1,12 @@
 import os
 import pandas as pd
 import numpy as np
-os.chdir('/Users/aneeshks/Documents/BAO/Analysis/InfectedDevices') 
+os.chdir('path') 
 
 #colnames=['Site', 'Devices', 'Requests'] 
-#sourceDataDF = pd.read_csv('part-00000-286f9ccd-2a22-4dff-ae22-dde414e74649-c000.csv', sep='\t', names=colnames, header=None)
+#sourceDataDF = pd.read_csv('c000.csv', sep='\t', names=colnames, header=None)
 
-sourceDataDF = pd.read_csv('part-00000-22d3fd2e-0506-4bfe-9552-144ddefada49-c000.csv', sep='\t')
+sourceDataDF = pd.read_csv('c000.csv', sep='\t')
 print(sourceDataDF.shape)
 sourceDataDF.head(2)
 
@@ -115,5 +115,4 @@ for featSites in Sites:
             DevStaticStart = DevStaticStart + Tempdata[Tempdata['Site'] == VarClosestSiteFirst]["NewDeviceAddition"]
 
         else: print("end")
-
-    OutPutdata.to_csv("FileOut6Sites.csv", sep='\t',header=True, line_terminator='\n')
+OutPutdata.to_csv("FileOut6Sites.csv", sep='\t',header=True, line_terminator='\n')
