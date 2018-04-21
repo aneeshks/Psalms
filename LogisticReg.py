@@ -1,3 +1,6 @@
+# Internal referance 
+# from Machine Learning Action by PeterHarrington
+
 from numpy import *
 
 def loadDataSet():
